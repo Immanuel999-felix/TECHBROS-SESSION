@@ -1,20 +1,18 @@
-# Use the lightweight Node.js 20 image (matches your package.json)
-FROM node:20-alpine
+# Use a stable Node.js version
+FROM node:20-bullseye-slim
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /usr/src/app
 
-# Copy package files first to cache dependencies
+# Copy package files and install dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of your application code
+# Copy all your project files
 COPY . .
 
-# Expose the port (Railway/Heroku/Render will override this, but good for local)
+# Expose the port your app runs on (matches your .env or index.js)
 EXPOSE 8000
 
-# Start the bot
+# Start the bot directly (Bypassing PM2 to prevent Docker errors)
 CMD ["node", "index.js"]
